@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useParams, notFound } from "next/navigation";
 
 import { useState, useEffect } from "react";
+import Loading from "../loading";
 
 const DetailItem = ({ label, value }: { label: string; value: string }) => (
   <div className="flex flex-col p-3 rounded-lg bg-zinc-800/50 border border-purple-800/50">
@@ -65,7 +66,7 @@ const GameDetailPage = () => {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <div className="text-white text-xl font-bold">
-          Cargando datos del juego...
+          <Loading />
         </div>
       </div>
     );
@@ -206,8 +207,6 @@ const GameDetailPage = () => {
                   PLATAFORMAS: {game.platforms.join(" / ")}
                 </p>
               </div>
-
-              {/* ELIMINADA LA SECCIÓN DE REQUISITOS */}
             </div>
           </div>
         </div>

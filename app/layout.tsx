@@ -1,8 +1,9 @@
-"use client";
+import "./globals.css";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import HideNavbarOnAuth from "@/features/auth/HideNavbarOnAuth";
 import RotatingBar from "@/components/ui/RotatingBar";
+import { CartProvider } from "@/context/CartContext";
 
 export default function RootLayout({
   children,
@@ -13,10 +14,11 @@ export default function RootLayout({
     <html lang="es">
       {/* Aplicamos la clase dark a todo el cuerpo para que el tema oscuro funcione */}
       <body className="min-h-screen bg-black dark">
+        <CartProvider>
         <HideNavbarOnAuth>
           <RotatingBar />
           <Navbar />
-        </HideNavbarOnAuth>
+        </HideNavbarOnAuth>      
         {/* Contenedor principal para el contenido de la página, asegurando que el z-index del body::before no lo tape */}
         <div className="relative z-10">
           {children}
@@ -24,8 +26,8 @@ export default function RootLayout({
         <HideNavbarOnAuth>
           <Footer />
         </HideNavbarOnAuth>
+        </CartProvider>
       </body>
-
     </html>
   );
 }

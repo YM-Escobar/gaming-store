@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { MasVendidosData } from '@/features/games/MasVendidosData';
-import NuevosLanzamientos from "@/features/games/NuevosLanzamientos"; // Nueva ruta
+import NuevosLanzamientos from "@/features/games/NuevosLanzamientos";
 import AgregadosRecientemente from "@/features/games/AgregadosReciente";
 
 
@@ -14,12 +14,6 @@ export default function Home() {
         <NuevosLanzamientos />
         <AgregadosRecientemente />
         <MasVendidosData />
-          
-     
-
-       
-       
-          
           
       </main>
     
