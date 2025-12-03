@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/Card";
 import { FaCartPlus } from "react-icons/fa6";
 import type { Product } from "@/types/game";
 import { useCartContext } from "@/context/CartContext";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -34,13 +35,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       router.push(`/games/${product.id}`);
     }
   };
-  
+  const [added, setAdded] = useState(false);
   return (
     <Card
       onClick={handleCardClick}
       className={`group relative overflow-hidden rounded-2xl
         border border-purple-500/40
-        bg-[radial-gradient(circle_at_30%_20%,rgba(147,51,234,0.25),rgba(255,255,255,0)_70%),rgba(255,255,255,0.08)]
+        bg-linear-to-br from-blue-300 via-transparent-red to-purple-600
         backdrop-blur-2xl
         shadow-purple-700/30 shadow-lg
         transition-all duration-300
@@ -67,7 +68,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
 
         <div
-          className="absolute inset-x-0 bottom-0 translate-y-full shadow-2xl transition-all duration-300 ease-out group-hover:translate-y-0 bg-white/95 backdrop-blur"
+          className="absolute inset-x-0 bottom-0 translate-y-full shadow-2xl transition-all duration-300 ease-out group-hover:translate-y-0 backdrop-blur"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="p-4">
@@ -80,11 +81,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               </Button>
 
               <Button
-                onClick={() => addToCart(product)}
-                className="flex-1 h-12 bg-white text-black font-bold rounded-full border-2 border-black hover:bg-gray-100 shadow-lg"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToCart(product);
+
+                  setAdded(true);
+                  setTimeout(() => setAdded(false), 1500);
+                }}
+                className={`flex-1 h-12 font-bold rounded-full cursor-pointer shadow-lg transition-all
+    ${
+      added
+        ? "bg-black text-neon-green text-glow-green border-green-800"
+        : "bg-white text-black border-2 border-black hover:bg-gray-300"
+    }
+  `}
               >
-                <FaCartPlus className="h-5 w-5 mr-2" />
-                AGREGAR
+                {added ? (
+                  "✓ AGREGADO"
+                ) : (
+                  <>
+                    <FaCartPlus className="h-5 w-5 mr-2" />
+                    AGREGAR
+                  </>
+                )}
               </Button>
             </div>
           </div>

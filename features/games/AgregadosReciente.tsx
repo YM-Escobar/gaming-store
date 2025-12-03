@@ -1,9 +1,13 @@
 "use client";
-import React from "react";
 
+import Img from 'next/image'
 export default function AgregadosReciente() {
   const lanzamientos = [
-    "/nuevos1.jpg",
+    "/Little_night.webp",
+    "/GRAN-TURISMO-7.webp",
+    "/stellar-blade-ps5.webp",
+    "/portada-helldivers-2-ps5.webp",
+    "/the-last-of-us-parte-i.webp",
   ];
 
   const doble = [...lanzamientos, ...lanzamientos];
@@ -18,7 +22,7 @@ export default function AgregadosReciente() {
         <div className="nl-track">
           {doble.map((src, i) => (
             <div key={i} className="nl-card">
-              <img src={src} className="nl-img" alt={`Lanzamiento ${i}`} />
+              <Img src={src} className="nl-img" alt={`Lanzamiento ${i}`} width={500} height={500} />
             </div>
           ))}
         </div>

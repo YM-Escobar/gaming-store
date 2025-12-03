@@ -1,9 +1,17 @@
 "use client";
 import React from "react";
-
-export default function NuevosLanzamientos() {
+import Img from 'next/image'
+export default function MasVendidos() {
   const lanzamientos = [
-    "/nuevos1.jpg",
+    "/monster-hunter-wilds.webp",
+    "/outw2.webp",
+    "/borderlands_4.webp",
+    "/madden26.webp",
+    "/300px-Kingdom_Come_Deliverance.webp",
+    "/e2gof.webp",
+
+    
+
   ];
 
   const doble = [...lanzamientos, ...lanzamientos];
@@ -18,7 +26,7 @@ export default function NuevosLanzamientos() {
         <div className="nl-track">
           {doble.map((src, i) => (
             <div key={i} className="nl-card">
-              <img src={src} className="nl-img" alt={`Lanzamiento ${i}`} />
+              <Img src={src} className="nl-img" alt={`Lanzamiento ${i}`} width={900} height={900}/>
             </div>
           ))}
         </div>
@@ -58,7 +66,7 @@ justify-content: center;
         .nl-track {
           display: flex;
           gap: 18px;
-          animation: scrollInfinite 22s linear infinite;
+          animation: scrollInfinite 20s linear infinite;
           align-items: center;
           justify-content: center;
         }

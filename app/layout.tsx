@@ -2,7 +2,6 @@ import "./globals.css";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import HideNavbarOnAuth from "@/features/auth/HideNavbarOnAuth";
-import RotatingBar from "@/components/ui/RotatingBar";
 import { CartProvider } from "@/context/CartContext";
 
 export default function RootLayout({
@@ -16,7 +15,6 @@ export default function RootLayout({
       <body className="min-h-screen bg-black dark">
         <CartProvider>
         <HideNavbarOnAuth>
-          <RotatingBar />
           <Navbar />
         </HideNavbarOnAuth>      
         {/* Contenedor principal para el contenido de la página, asegurando que el z-index del body::before no lo tape */}
