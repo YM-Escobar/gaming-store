@@ -17,35 +17,55 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 const [cart, setCart] = useState<CartItem[]>([]);
 
-const addToCart = useCallback((product: Product) => {
-  setCart(prev => {
-    const existing = prev.find(item => item.id === product.id);
-    if (existing) {
-      return prev.map(item =>
-        item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
+  const addToCart = useCallback((product: Product) => {
+    // Guard: ensure we have a defined id (CartItem.id expects string)
+    if (!product.id) {
+      console.warn("Can't add product without an id to the cart", product);
+      return;
     }
-    return [
-      ...prev,
-      {
-        id: product.id,
-        name: product.title,
-        price: product.price,
-        quantity: 1,
-        image: product.image || 'via.placeholder.com',
-      },
-    ];
-  });
-}, []);
+
+    // Normalize image -> string. If it's a Blob, create an object URL.
+    const src = product.imageSrc ?? product.image;
+    let imageStr = "";
+    if (typeof src === "string") {
+      imageStr = src;
+    } else if (src instanceof Blob) {
+      imageStr = URL.createObjectURL(src);
+    }
+
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+
+      // Create a CartItem with required fields (id is guaranteed defined)
+      return [
+        ...prev,
+        {
+          id: product.id,
+          name: product.name ?? product.title ?? "Unknown",
+          price: product.price ?? 0,
+          quantity: 1,
+          image: imageStr,
+        },
+      ];
+    });
+  }, []);
 
 
 
   const removeFromCart = useCallback((id: string) => {
-    setCart(prev => prev.filter(item => item.id !== id));
+    setCart((prev) => {
+      const toRemove = prev.find((item) => item.id === id);
+      if (toRemove && typeof toRemove.image === "string" && toRemove.image.startsWith("blob:")) {
+        try { URL.revokeObjectURL(toRemove.image); } catch {}
+      }
+      return prev.filter((item) => item.id !== id);
+    });
   }, []);
-
   const updateQuantity = useCallback((id: string, quantity: number) => {
     setCart(prev =>
       prev.map(item =>
@@ -54,7 +74,16 @@ const addToCart = useCallback((product: Product) => {
     );
   }, []);
 
-  const clearCart = useCallback(() => setCart([]), []);
+    const clearCart = useCallback(() => {
+    setCart((prev) => {
+      prev.forEach((item) => {
+        if (item.image && item.image.startsWith("blob:")) {
+          try { URL.revokeObjectURL(item.image); } catch {}
+        }
+      });
+      return [];
+    });
+  }, []);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 

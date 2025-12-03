@@ -6,7 +6,7 @@ export type Product = {
   href: string | undefined;
   imageSrc: string | Blob | undefined;
   imageAlt: string | undefined;
-  id: string | undefined;
+  id: string;
   title: string;
   name: string;
   description: string;
