@@ -44,34 +44,51 @@ export default function ProductsPage() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
+    const formTitle = formData.get("title") as string;
     const productData = {
+      // keep id locally for update calls only
       id: editingProduct?.id,
-      title: formData.get("title") as string,
-      name: formData.get("title") as string,
+      title: formTitle,
+      name: formTitle,
       price: Number(formData.get("price") || 0),
       description: (formData.get("description") as string) || "Sin descripción",
-      image:
-        (formData.get("image") as string) ||
-        "https://via.placeholder.com/600x800?text=Game",
+      image: (formData.get("image") as string) || "https://via.placeholder.com/600x800?text=Game",
       category: (formData.get("category") as string) || "Videojuego",
       genre: (formData.get("genre") as string) || "Acción",
       platforms: (formData.get("platforms") as string)
         ?.split(",")
         .map((p) => p.trim())
         .filter(Boolean) || ["PC"],
-      releaseDate:
-        (formData.get("releaseDate") as string) ||
-        new Date().toISOString().split("T")[0],
-      developer:
-        (formData.get("developer") as string) || "Estudio Independiente",
+      releaseDate: (formData.get("releaseDate") as string) || new Date().toISOString().split("T")[0],
+      developer: (formData.get("developer") as string) || "Estudio Independiente",
+    };
+
+    // Build a payload that matches Omit<Product, "id">
+    const payload = {
+      title: productData.title,
+      name: productData.name,
+      price: productData.price,
+      description: productData.description,
+      // map existing `image` field to the Product interface fields
+      imageSrc: productData.image,
+      imageAlt: productData.title,
+      category: productData.category,
+      genre: productData.genre,
+      platforms: productData.platforms,
+      releaseDate: productData.releaseDate,
+      developer: productData.developer,
+      // provide defaults for required fields your Product type expects
+      color: (formData.get("color") as string) || "",
+      quantity: Number(formData.get("quantity") || 1),
+      href: (editingProduct?.id && `/products/${editingProduct.id}`) || "#",
     };
 
     try {
       if (editingProduct) {
-        await productService.update(editingProduct.id!, productData);
+        await productService.update(editingProduct.id!, payload);
         toast.success("Producto actualizado correctamente");
       } else {
-        await productService.create(productData);
+        await productService.create(payload);
         toast.success("Producto creado correctamente");
       }
       setOpen(false);
@@ -79,9 +96,7 @@ export default function ProductsPage() {
       load();
     } catch (err) {
       console.error(err);
-      toast.error(
-        editingProduct ? "Error al actualizar" : "Error al crear producto"
-      );
+      toast.error(editingProduct ? "Error al actualizar" : "Error al crear producto");
     }
   };
 

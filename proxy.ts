@@ -16,5 +16,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
     // Apply middleware to specific routes
-    matcher: ["/dashboard"]
+    matcher: ["/dashboard"],
+    admin: ["/admin"]
 };
